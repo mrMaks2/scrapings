@@ -1,5 +1,5 @@
 """
-URL configuration for scrapin project.
+URL configuration for scraping project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
@@ -15,10 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from .views import home
+from django.urls import path, include
+from scraping_app.views import home_view, list_view, v_detail, VDetail, VList, VCreate, VUpdate, VDelete
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', home),
+    path('list', VList.as_view(), name='list'),
+    path('accounts/', include(('accounts.urls', 'accounts'))),
+    path('detail/<int:pk>/', VDetail.as_view(), name='detail'),
+    path('create/', VCreate.as_view(), name='create'),
+    path('update/<int:pk>/', VUpdate.as_view(), name='update'),
+    path('delete/<int:pk>/', VDelete.as_view(), name='delete'),
+    path('', home_view, name='home'),
+    path('home/', home_view, name='home'),
 ]

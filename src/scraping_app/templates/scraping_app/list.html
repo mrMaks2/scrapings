@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Cool Servise{% endblock %}
+
+
+
+{% block content %}
+
+{% if object_list %}
+<h3 class="my-4 text-center">Результаты поиска, согласно Вашим запросам.</h3>
+  {% for obj in object_list %}
+    <div class="card my-3">
+      <h5 class="card-header"><a href="{{ obj.url }}">{{ obj.title }}</a></h5>
+      <div class="card-body">
+        <p class="card-text">{{ obj.description }}</p>
+        <p><b>{{ obj.company }}</b></p>
+          <p>{{ obj.city.name }} | {{ obj.language.name }}</p>
+           <p><small>{{ obj.timestamp | date:"d-m-Y"}}</small></p>
+      </div>
+    </div>
+  {% endfor %}
+  <div class="row">
+    <div class="col">
+            <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?city={{ city }}&language={{ language }}&page=1" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          {% endif %}
+          {% for page in page_obj.paginator.page_range %}
+          <li class="page-item {% if page == page_obj.number %} active {% endif %}">
+            <a class="page-link" href="?city={{ city }}&language={{ language }}&page={{ page }}">
+              {{ page }}
+            </a>
+          </li>
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li class="page-item">
+              <a class="page-link" href="?city={{ city }}&language={{ language }}&page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>
+    </div>
+  </div>
+{% else %}
+  <h3 class="my-4 text-center">К сожалению, по Вашему запросу, результатов нет.</h3>
+{% endif %}
+<div class="row">
+  <div class="col-md-8 mx-auto">
+    <form method="GET" action="{% url 'list' %}">
+      <div class="form-group">
+        {{ form.as_p }}
+      </div>
+      <button type="submit" class="btn btn-primary">Новый поиск</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
